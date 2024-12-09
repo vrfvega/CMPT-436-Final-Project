@@ -9,8 +9,8 @@ root.geometry("300x300")
 
 def button_callback():
     try:#converting input
-        matrix_i = entry_matrix.get()
-        vector_i = entry_vector.get()
+        matrix_i = entryM.get()
+        vector_i = entryV.get()
         A=eval(matrix_i)
         b=eval(vector_i)
         result=gauss_jordan(A,b)
