@@ -35,18 +35,18 @@ def gauss_elimination(A, b):
             augmented[i], augmented[max_row] = augmented[max_row], augmented[i]
 
         # Eliminate below the pivot row
-        for j in range(i+1, n):
+        for j in range(i + 1, n):
             factor = augmented[j][i] / augmented[i][i]
-            for k in range(i, n+1):
+            for k in range(i, n + 1):
                 augmented[j][k] -= factor * augmented[i][k]
 
     # Back substitution
-    x = [0]*n
-    for i in range(n-1, -1, -1):
+    x = [0] * n
+    for i in range(n - 1, -1, -1):
         if abs(augmented[i][i]) < 1e-12:
             raise ValueError("Matrix is singular or nearly singular")
 
-        sum_ax = sum(augmented[i][j]*x[j] for j in range(i+1, n))
+        sum_ax = sum(augmented[i][j] * x[j] for j in range(i + 1, n))
         x[i] = (augmented[i][n] - sum_ax) / augmented[i][i]
         # Store the solution back into augmented matrix so we can extract it as before
         augmented[i][n] = x[i]
@@ -95,12 +95,3 @@ def calculate_mae(A, x, b):
         # Calculate absolute error
         errors.append(abs(ax_i - b[i]))
     return sum(errors) / n
-
-
-
-
-
-
-
-
-

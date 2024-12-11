@@ -6,8 +6,8 @@ from typing import List, Tuple
 
 import numpy as np
 
+from src.gauss_elimination import gauss_elimination
 from src.gauss_jordan import gauss_jordan
-from src.gaussian_elimination import gauss_elimination
 
 
 class EntryField(customtkinter.CTkEntry):
@@ -29,7 +29,7 @@ class EntryField(customtkinter.CTkEntry):
 def validate_file_format(file_path):
     """Validate the contents of the input file."""
     try:
-        with open(file_path, 'r') as file:
+        with open(file_path, "r") as file:
             lines = file.readlines()
 
         # Remove empty lines and whitespace
@@ -40,13 +40,14 @@ def validate_file_format(file_path):
             raise ValueError("File is empty")
 
         # Split first line to determine number of columns
-        first_line = lines[0].replace(',', ' ').split()
+        first_line = lines[0].replace(",", " ").split()
         num_cols = len(first_line)
 
         # Check if all values are numeric
         try:
-            matrix = [[float(val) for val in line.replace(',', ' ').split()]
-                      for line in lines]
+            matrix = [
+                [float(val) for val in line.replace(",", " ").split()] for line in lines
+            ]
         except ValueError:
             raise ValueError("All values must be numeric")
 
@@ -138,8 +139,8 @@ class AugmentedMatrixFrame(customtkinter.CTkFrame):
             filetypes=[
                 ("Text files", "*.txt"),
                 ("CSV files", "*.csv"),
-                ("All files", "*.*")
-            ]
+                ("All files", "*.*"),
+            ],
         )
 
         if not file_path:
@@ -149,8 +150,8 @@ class AugmentedMatrixFrame(customtkinter.CTkFrame):
             # Determine file type and read accordingly
             ext = os.path.splitext(file_path)[1].lower()
 
-            if ext == '.csv':
-                matrix = np.genfromtxt(file_path, delimiter=',')
+            if ext == ".csv":
+                matrix = np.genfromtxt(file_path, delimiter=",")
             else:  # .txt or other files
                 matrix = np.genfromtxt(file_path)
 
@@ -175,11 +176,13 @@ class AugmentedMatrixFrame(customtkinter.CTkFrame):
                     self.entries[i][j].insert(0, f"{matrix[i][j]:.6f}")
 
         except Exception as e:
-            self.show_error(f"Error loading file: {str(e)}\n\n"
-                            f"Expected format:\n"
-                            f"- Space or comma-separated numbers\n"
-                            f"- Last column should be the b vector\n"
-                            f"- All rows must have the same number of columns")
+            self.show_error(
+                f"Error loading file: {str(e)}\n\n"
+                f"Expected format:\n"
+                f"- Space or comma-separated numbers\n"
+                f"- Last column should be the b vector\n"
+                f"- All rows must have the same number of columns"
+            )
 
     def _create_matrix_entries(self):
         for widget in self.matrix_frame.winfo_children():
