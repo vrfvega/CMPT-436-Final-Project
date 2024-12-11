@@ -9,29 +9,30 @@ def tolerance():
     return 1e-6
 
 
+def verify_solution(coefficients, constants, solution, tolerance):
+    """
+    Helper method to verify if a solution satisfies the system of equations.
+
+    Args:
+        coefficients (list of lists): The coefficient matrix
+        constants (list): The constants vector
+        solution (list): The computed solution
+        tolerance (float): Acceptable error margin
+
+    Returns:
+        bool: True if solution is valid within tolerance
+    """
+    n = len(coefficients)
+    for i in range(n):
+        # Calculate left hand side of equation
+        lhs = sum(coefficients[i][j] * solution[j] for j in range(n))
+        # Verify it equals right hand side within tolerance
+        assert (
+            abs(lhs - constants[i]) < tolerance
+        ), f"Equation {i+1} not satisfied: {lhs} ≠ {constants[i]}"
+
+
 class TestGaussJordan:
-    def verify_solution(self, coefficients, constants, solution, tolerance):
-        """
-        Helper method to verify if a solution satisfies the system of equations.
-
-        Args:
-            coefficients (list of lists): The coefficient matrix
-            constants (list): The constants vector
-            solution (list): The computed solution
-            tolerance (float): Acceptable error margin
-
-        Returns:
-            bool: True if solution is valid within tolerance
-        """
-        n = len(coefficients)
-        for i in range(n):
-            # Calculate left hand side of equation
-            lhs = sum(coefficients[i][j] * solution[j] for j in range(n))
-            # Verify it equals right hand side within tolerance
-            assert (
-                abs(lhs - constants[i]) < tolerance
-            ), f"Equation {i+1} not satisfied: {lhs} ≠ {constants[i]}"
-
     def test_system1(self, tolerance):
         # Define the augmented matrix
         matrix = [
@@ -54,7 +55,7 @@ class TestGaussJordan:
         assert len(solution) == 3, f"Expected 3 values, got {len(solution)}"
 
         # Verify the solution satisfies all equations
-        self.verify_solution(coefficients, constants, solution, tolerance)
+        verify_solution(coefficients, constants, solution, tolerance)
 
     def test_system2(self, tolerance):
         """Test case for a 3x3 system with unique solution."""
@@ -72,7 +73,7 @@ class TestGaussJordan:
         assert solution is not None, "No solution returned"
         assert len(solution) == 3, f"Expected 3 values, got {len(solution)}"
 
-        self.verify_solution(coefficients, constants, solution, tolerance)
+        verify_solution(coefficients, constants, solution, tolerance)
 
     def test_singular_matrix(self):
         """Test case for a singular matrix that should raise ValueError."""
