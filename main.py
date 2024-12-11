@@ -17,7 +17,7 @@ class EntryField(customtkinter.CTkEntry):
             border_color="#404040",
             fg_color="#2d2d2d",
             text_color="#ffffff",
-            placeholder_text_color="#666666"
+            placeholder_text_color="#666666",
         )
 
 
@@ -39,7 +39,7 @@ class AugmentedMatrixFrame(customtkinter.CTkFrame):
             size_frame,
             text="Matrix Size:",
             font=("Inter", 13, "bold"),
-            text_color="#cccccc"
+            text_color="#cccccc",
         ).pack(side="left", padx=5)
 
         self.row_spinbox = EntryField(size_frame, placeholder_text="Rows")
@@ -47,10 +47,7 @@ class AugmentedMatrixFrame(customtkinter.CTkFrame):
         self.row_spinbox.insert(0, str(self.rows))
 
         customtkinter.CTkLabel(
-            size_frame,
-            text="×",
-            font=("Inter", 13, "bold"),
-            text_color="#cccccc"
+            size_frame, text="×", font=("Inter", 13, "bold"), text_color="#cccccc"
         ).pack(side="left", padx=5)
 
         self.col_spinbox = EntryField(size_frame, placeholder_text="Cols")
@@ -65,7 +62,7 @@ class AugmentedMatrixFrame(customtkinter.CTkFrame):
             height=35,
             corner_radius=8,
             fg_color="#3d5afe",
-            hover_color="#3949ab"
+            hover_color="#3949ab",
         )
         update_btn.pack(side="left", padx=10)
 
@@ -75,7 +72,7 @@ class AugmentedMatrixFrame(customtkinter.CTkFrame):
             fg_color="#242424",
             corner_radius=12,
             border_width=1,
-            border_color="#404040"
+            border_color="#404040",
         )
         self.matrix_frame.pack(pady=15, padx=10)
         self._create_matrix_entries()
@@ -87,9 +84,7 @@ class AugmentedMatrixFrame(customtkinter.CTkFrame):
 
         # Create header labels with improved styling
         header_frame = customtkinter.CTkFrame(
-            self.matrix_frame,
-            fg_color="transparent",
-            height=30
+            self.matrix_frame, fg_color="transparent", height=30
         )
         header_frame.pack(fill="x", padx=15, pady=(10, 0))
 
@@ -103,22 +98,18 @@ class AugmentedMatrixFrame(customtkinter.CTkFrame):
                 text=label_text,
                 font=("Inter", 12, "bold"),
                 text_color="#999999",
-                width=60
+                width=60,
             )
             label.pack(side="left", padx=3)
 
         # Create entry fields container
         entries_frame = customtkinter.CTkFrame(
-            self.matrix_frame,
-            fg_color="transparent"
+            self.matrix_frame, fg_color="transparent"
         )
         entries_frame.pack(fill="both", padx=15, pady=10)
 
         for i in range(self.rows):
-            row_frame = customtkinter.CTkFrame(
-                entries_frame,
-                fg_color="transparent"
-            )
+            row_frame = customtkinter.CTkFrame(entries_frame, fg_color="transparent")
             row_frame.pack(fill="x", pady=2)
 
             row_entries = []
@@ -129,10 +120,7 @@ class AugmentedMatrixFrame(customtkinter.CTkFrame):
 
                 if j == self.cols - 2:
                     separator = customtkinter.CTkFrame(
-                        row_frame,
-                        width=2,
-                        height=35,
-                        fg_color="#404040"
+                        row_frame, width=2, height=35, fg_color="#404040"
                     )
                     separator.pack(side="left", padx=(3, 0))
 
@@ -178,10 +166,7 @@ class AugmentedMatrixFrame(customtkinter.CTkFrame):
         error_window.configure(fg_color="#1a1a1a")
 
         customtkinter.CTkLabel(
-            error_window,
-            text=message,
-            font=("Inter", 14),
-            text_color="#ff5252"
+            error_window, text=message, font=("Inter", 14), text_color="#ff5252"
         ).pack(pady=20)
 
         customtkinter.CTkButton(
@@ -192,7 +177,7 @@ class AugmentedMatrixFrame(customtkinter.CTkFrame):
             height=35,
             corner_radius=8,
             fg_color="#3d5afe",
-            hover_color="#3949ab"
+            hover_color="#3949ab",
         ).pack(pady=10)
 
 
@@ -213,15 +198,13 @@ class MatrixCalculatorApp:
             corner_radius=20,
             fg_color="#1a1a1a",
             border_width=1,
-            border_color="#333333"
+            border_color="#333333",
         )
         main_frame.pack(pady=20, padx=20, fill="both", expand=True)
 
         # Title with improved typography
         title_frame = customtkinter.CTkFrame(
-            main_frame,
-            fg_color="transparent",
-            height=80
+            main_frame, fg_color="transparent", height=80
         )
         title_frame.pack(fill="x")
 
@@ -229,16 +212,13 @@ class MatrixCalculatorApp:
             title_frame,
             text="Matrix Calculator",
             font=("Inter", 28, "bold"),
-            text_color="#ffffff"
+            text_color="#ffffff",
         )
         title_label.pack(pady=20)
 
         # Method selection with improved styling
         method_frame = customtkinter.CTkFrame(
-            main_frame,
-            fg_color="#242424",
-            corner_radius=12,
-            height=60
+            main_frame, fg_color="#242424", corner_radius=12, height=60
         )
         method_frame.pack(pady=15, padx=30, fill="x")
 
@@ -248,7 +228,7 @@ class MatrixCalculatorApp:
             method_frame,
             text="Select Method:",
             font=("Inter", 14, "bold"),
-            text_color="#cccccc"
+            text_color="#cccccc",
         )
         method_label.pack(side="left", padx=20)
 
@@ -265,14 +245,11 @@ class MatrixCalculatorApp:
                 height=28,
                 fg_color="#3d5afe",
                 border_color="#666666",
-                text_color="#ffffff"
+                text_color="#ffffff",
             ).pack(side="left", padx=15)
 
         # Content container with improved layout
-        content_frame = customtkinter.CTkFrame(
-            main_frame,
-            fg_color="transparent"
-        )
+        content_frame = customtkinter.CTkFrame(main_frame, fg_color="transparent")
         content_frame.pack(pady=15, fill="both", expand=True)
 
         # Input panel
@@ -281,7 +258,7 @@ class MatrixCalculatorApp:
             corner_radius=15,
             fg_color="#2d2d2d",
             border_width=1,
-            border_color="#404040"
+            border_color="#404040",
         )
         input_frame.pack(side="left", padx=10, fill="both", expand=True)
 
@@ -289,7 +266,7 @@ class MatrixCalculatorApp:
             input_frame,
             text="Augmented Matrix [A|b]",
             font=("Inter", 18, "bold"),
-            text_color="#ffffff"
+            text_color="#ffffff",
         )
         matrix_label.pack(pady=(20, 10))
 
@@ -304,7 +281,7 @@ class MatrixCalculatorApp:
             height=45,
             corner_radius=10,
             fg_color="#3d5afe",
-            hover_color="#3949ab"
+            hover_color="#3949ab",
         )
         self.calc_button.pack(pady=30)
 
@@ -314,7 +291,7 @@ class MatrixCalculatorApp:
             corner_radius=15,
             fg_color="#2d2d2d",
             border_width=1,
-            border_color="#404040"
+            border_color="#404040",
         )
         output_frame.pack(side="right", padx=10, fill="both", expand=True)
 
@@ -322,7 +299,7 @@ class MatrixCalculatorApp:
             output_frame,
             text="Results",
             font=("Inter", 18, "bold"),
-            text_color="#ffffff"
+            text_color="#ffffff",
         )
         result_label.pack(pady=(20, 10))
 
@@ -334,7 +311,7 @@ class MatrixCalculatorApp:
             fg_color="#242424",
             text_color="#ffffff",
             border_width=1,
-            border_color="#404040"
+            border_color="#404040",
         )
         self.result_text.pack(pady=15, padx=20, fill="both", expand=True)
 
@@ -353,12 +330,29 @@ class MatrixCalculatorApp:
 
             if self.method_var.get() == "gauss_jordan":
                 try:
-                    result = gauss_jordan(matrix_a, vector_b)
-                    self.result_text.insert("end", "Solution:\n")
-                    for i, val in enumerate(result):
+                    solution, mae, is_diag_dominant = gauss_jordan(matrix_a, vector_b)
+
+                    # Display diagonal dominance warning if necessary
+                    if not is_diag_dominant:
+                        self.result_text.insert(
+                            "end", "⚠️ Matrix is not diagonally dominant.\n\n", "warning"
+                        )
+
+                    # Display solution
+                    self.result_text.insert("end", "Solution:\n", "header")
+                    for i, val in enumerate(solution):
                         self.result_text.insert("end", f"x{i + 1} = {val:8.4f}\n")
+
+                    # Display mean absolute error
+                    self.result_text.insert(
+                        "end", f"\nMean Absolute Error: {mae:8.4e}\n", "info"
+                    )
+
+                    # Add visual separator
+                    self.result_text.insert("end", "-" * 40 + "\n")
+
                 except ValueError as e:
-                    self.result_text.insert("end", f"Error: {str(e)}")
+                    self.result_text.insert("end", f"Error: {str(e)}\n", "error")
             else:
                 try:
                     result = gauss_elimination(matrix_a)

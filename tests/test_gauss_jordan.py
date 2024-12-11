@@ -46,7 +46,7 @@ class TestGaussJordan:
         coefficients = [row[:-1] for row in matrix]
 
         # Perform Gauss elimination
-        solution = gauss_jordan(coefficients, constants)
+        solution, mae, is_diag_dominant = gauss_jordan(coefficients, constants)
 
         # Verify the solution exists
         assert solution is not None, "No solution returned"
@@ -68,7 +68,7 @@ class TestGaussJordan:
         constants = [row[-1] for row in matrix]
         coefficients = [row[:-1] for row in matrix]
 
-        solution = gauss_jordan(coefficients, constants)
+        solution, mae, is_diag_dominant = gauss_jordan(coefficients, constants)
 
         assert solution is not None, "No solution returned"
         assert len(solution) == 3, f"Expected 3 values, got {len(solution)}"
@@ -92,3 +92,29 @@ class TestGaussJordan:
 
         with pytest.raises(ValueError, match="Matrix is singular or nearly singular"):
             gauss_jordan(coefficients, constants)
+
+    def test_not_diagonally_dominant_matrix(self):
+        """Test case for a matrix that is not diagonally dominant."""
+        coefficients = [[2, 1, 1], [1, 2, 1], [1, 1, 2]]
+        constants = [4, 5, 6]
+
+        solution, mae, is_diag_dominant = gauss_jordan(coefficients, constants)
+
+        assert is_diag_dominant is False
+
+    def test_diagonally_dominant_matrix(self):
+        """Test case for a matrix that is diagonally dominant."""
+        coefficients = [[4, 1, -1], [-1, 5, 1], [2, -2, 6]]
+        constants = [7, 8, 5]
+
+        solution, mae, is_diag_dominant = gauss_jordan(coefficients, constants)
+
+        assert is_diag_dominant is True
+
+    def test_calculate_mae(self):
+        A = [[2, 1], [1, 3]]
+        b = [4, 7]
+
+        solution, mae, is_diag_dominant = gauss_jordan(A, b)
+
+        assert mae == 0
