@@ -1,5 +1,10 @@
+import os
+from tkinter import filedialog
+
 import customtkinter
 from typing import List, Tuple
+
+import numpy as np
 
 from src.gauss_jordan import gauss_jordan
 from src.gaussian_elimination import gauss_elimination
@@ -21,6 +26,40 @@ class EntryField(customtkinter.CTkEntry):
         )
 
 
+def validate_file_format(file_path):
+    """Validate the contents of the input file."""
+    try:
+        with open(file_path, 'r') as file:
+            lines = file.readlines()
+
+        # Remove empty lines and whitespace
+        lines = [line.strip() for line in lines if line.strip()]
+
+        # Check if file is empty
+        if not lines:
+            raise ValueError("File is empty")
+
+        # Split first line to determine number of columns
+        first_line = lines[0].replace(',', ' ').split()
+        num_cols = len(first_line)
+
+        # Check if all values are numeric
+        try:
+            matrix = [[float(val) for val in line.replace(',', ' ').split()]
+                      for line in lines]
+        except ValueError:
+            raise ValueError("All values must be numeric")
+
+        # Check if all rows have the same number of columns
+        if not all(len(row) == num_cols for row in matrix):
+            raise ValueError("All rows must have the same number of columns")
+
+        return matrix
+
+    except Exception as e:
+        raise ValueError(f"Invalid file format: {str(e)}")
+
+
 class AugmentedMatrixFrame(customtkinter.CTkFrame):
     def __init__(self, master, rows=3, cols=4, **kwargs):
         super().__init__(master, **kwargs)
@@ -31,6 +70,22 @@ class AugmentedMatrixFrame(customtkinter.CTkFrame):
         self._create_widgets()
 
     def _create_widgets(self):
+        # File loading controls
+        file_frame = customtkinter.CTkFrame(self, fg_color="transparent")
+        file_frame.pack(pady=10)
+
+        load_btn = customtkinter.CTkButton(
+            file_frame,
+            text="Load from File",
+            command=self._load_from_file,
+            font=("Inter", 13),
+            height=35,
+            corner_radius=8,
+            fg_color="#3d5afe",
+            hover_color="#3949ab",
+        )
+        load_btn.pack(side="left", padx=10)
+
         # Matrix size controls
         size_frame = customtkinter.CTkFrame(self, fg_color="transparent")
         size_frame.pack(pady=10)
@@ -76,6 +131,55 @@ class AugmentedMatrixFrame(customtkinter.CTkFrame):
         )
         self.matrix_frame.pack(pady=15, padx=10)
         self._create_matrix_entries()
+
+    def _load_from_file(self):
+        file_path = filedialog.askopenfilename(
+            title="Select Matrix File",
+            filetypes=[
+                ("Text files", "*.txt"),
+                ("CSV files", "*.csv"),
+                ("All files", "*.*")
+            ]
+        )
+
+        if not file_path:
+            return
+
+        try:
+            # Determine file type and read accordingly
+            ext = os.path.splitext(file_path)[1].lower()
+
+            if ext == '.csv':
+                matrix = np.genfromtxt(file_path, delimiter=',')
+            else:  # .txt or other files
+                matrix = np.genfromtxt(file_path)
+
+            # Clear existing size entries
+            self.row_spinbox.delete(0, "end")
+            self.col_spinbox.delete(0, "end")
+
+            # Update internal size variables
+            self.rows, self.cols = matrix.shape
+
+            # Update size entries with new values
+            self.row_spinbox.insert(0, str(self.rows))
+            self.col_spinbox.insert(0, str(self.cols - 1))
+
+            # Clear existing entries and create new ones
+            self._update_matrix_size()
+
+            # Fill in the values
+            for i in range(self.rows):
+                for j in range(self.cols):
+                    self.entries[i][j].delete(0, "end")
+                    self.entries[i][j].insert(0, f"{matrix[i][j]:.6f}")
+
+        except Exception as e:
+            self.show_error(f"Error loading file: {str(e)}\n\n"
+                            f"Expected format:\n"
+                            f"- Space or comma-separated numbers\n"
+                            f"- Last column should be the b vector\n"
+                            f"- All rows must have the same number of columns")
 
     def _create_matrix_entries(self):
         for widget in self.matrix_frame.winfo_children():
