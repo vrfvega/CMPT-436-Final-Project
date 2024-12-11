@@ -6,8 +6,8 @@ from typing import List, Tuple
 
 import numpy as np
 
-from src.gauss_elimination import gauss_elimination
 from src.gauss_jordan import gauss_jordan
+from src.gauss_elimination import gauss_elimination
 
 
 class EntryField(customtkinter.CTkEntry):
@@ -32,18 +32,13 @@ def validate_file_format(file_path):
         with open(file_path, "r") as file:
             lines = file.readlines()
 
-        # Remove empty lines and whitespace
         lines = [line.strip() for line in lines if line.strip()]
-
-        # Check if file is empty
         if not lines:
             raise ValueError("File is empty")
 
-        # Split first line to determine number of columns
         first_line = lines[0].replace(",", " ").split()
         num_cols = len(first_line)
 
-        # Check if all values are numeric
         try:
             matrix = [
                 [float(val) for val in line.replace(",", " ").split()] for line in lines
@@ -51,7 +46,6 @@ def validate_file_format(file_path):
         except ValueError:
             raise ValueError("All values must be numeric")
 
-        # Check if all rows have the same number of columns
         if not all(len(row) == num_cols for row in matrix):
             raise ValueError("All rows must have the same number of columns")
 
@@ -71,7 +65,6 @@ class AugmentedMatrixFrame(customtkinter.CTkFrame):
         self._create_widgets()
 
     def _create_widgets(self):
-        # File loading controls
         file_frame = customtkinter.CTkFrame(self, fg_color="transparent")
         file_frame.pack(pady=10)
 
@@ -87,7 +80,6 @@ class AugmentedMatrixFrame(customtkinter.CTkFrame):
         )
         load_btn.pack(side="left", padx=10)
 
-        # Matrix size controls
         size_frame = customtkinter.CTkFrame(self, fg_color="transparent")
         size_frame.pack(pady=10)
 
@@ -122,7 +114,6 @@ class AugmentedMatrixFrame(customtkinter.CTkFrame):
         )
         update_btn.pack(side="left", padx=10)
 
-        # Matrix entries
         self.matrix_frame = customtkinter.CTkFrame(
             self,
             fg_color="#242424",
@@ -147,29 +138,23 @@ class AugmentedMatrixFrame(customtkinter.CTkFrame):
             return
 
         try:
-            # Determine file type and read accordingly
             ext = os.path.splitext(file_path)[1].lower()
 
             if ext == ".csv":
                 matrix = np.genfromtxt(file_path, delimiter=",")
-            else:  # .txt or other files
+            else:
                 matrix = np.genfromtxt(file_path)
 
-            # Clear existing size entries
             self.row_spinbox.delete(0, "end")
             self.col_spinbox.delete(0, "end")
 
-            # Update internal size variables
             self.rows, self.cols = matrix.shape
 
-            # Update size entries with new values
             self.row_spinbox.insert(0, str(self.rows))
             self.col_spinbox.insert(0, str(self.cols - 1))
 
-            # Clear existing entries and create new ones
             self._update_matrix_size()
 
-            # Fill in the values
             for i in range(self.rows):
                 for j in range(self.cols):
                     self.entries[i][j].delete(0, "end")
@@ -189,17 +174,13 @@ class AugmentedMatrixFrame(customtkinter.CTkFrame):
             widget.destroy()
         self.entries.clear()
 
-        # Create header labels with improved styling
         header_frame = customtkinter.CTkFrame(
             self.matrix_frame, fg_color="transparent", height=30
         )
         header_frame.pack(fill="x", padx=15, pady=(10, 0))
 
         for j in range(self.cols):
-            if j < self.cols - 1:
-                label_text = f"x{j + 1}"
-            else:
-                label_text = "b"
+            label_text = f"x{j + 1}" if j < self.cols - 1 else "b"
             label = customtkinter.CTkLabel(
                 header_frame,
                 text=label_text,
@@ -209,7 +190,6 @@ class AugmentedMatrixFrame(customtkinter.CTkFrame):
             )
             label.pack(side="left", padx=3)
 
-        # Create entry fields container
         entries_frame = customtkinter.CTkFrame(
             self.matrix_frame, fg_color="transparent"
         )
@@ -299,7 +279,6 @@ class MatrixCalculatorApp:
         self._create_widgets()
 
     def _create_widgets(self):
-        # Main container with gradient background
         main_frame = customtkinter.CTkFrame(
             self.root,
             corner_radius=20,
@@ -309,7 +288,6 @@ class MatrixCalculatorApp:
         )
         main_frame.pack(pady=20, padx=20, fill="both", expand=True)
 
-        # Title with improved typography
         title_frame = customtkinter.CTkFrame(
             main_frame, fg_color="transparent", height=80
         )
@@ -323,7 +301,6 @@ class MatrixCalculatorApp:
         )
         title_label.pack(pady=20)
 
-        # Method selection with improved styling
         method_frame = customtkinter.CTkFrame(
             main_frame, fg_color="#242424", corner_radius=12, height=60
         )
@@ -355,11 +332,9 @@ class MatrixCalculatorApp:
                 text_color="#ffffff",
             ).pack(side="left", padx=15)
 
-        # Content container with improved layout
         content_frame = customtkinter.CTkFrame(main_frame, fg_color="transparent")
         content_frame.pack(pady=15, fill="both", expand=True)
 
-        # Input panel
         input_frame = customtkinter.CTkFrame(
             content_frame,
             corner_radius=15,
@@ -392,7 +367,6 @@ class MatrixCalculatorApp:
         )
         self.calc_button.pack(pady=30)
 
-        # Output panel
         output_frame = customtkinter.CTkFrame(
             content_frame,
             corner_radius=15,
@@ -436,37 +410,40 @@ class MatrixCalculatorApp:
             self.result_text.insert("end", "\n\n")
 
             if self.method_var.get() == "gauss_jordan":
-                try:
-                    solution, mae, is_diag_dominant = gauss_jordan(matrix_a, vector_b)
+                solution, mae, is_diag_dominant = gauss_jordan(matrix_a, vector_b)
 
-                    # Display diagonal dominance warning if necessary
-                    if not is_diag_dominant:
-                        self.result_text.insert(
-                            "end", "⚠️ Matrix is not diagonally dominant.\n\n", "warning"
-                        )
-
-                    # Display solution
-                    self.result_text.insert("end", "Solution:\n", "header")
-                    for i, val in enumerate(solution):
-                        self.result_text.insert("end", f"x{i + 1} = {val:8.4f}\n")
-
-                    # Display mean absolute error
+                if not is_diag_dominant:
                     self.result_text.insert(
-                        "end", f"\nMean Absolute Error: {mae:8.4e}\n", "info"
+                        "end",
+                        "\u26a0\ufe0f Matrix is not diagonally dominant.\n\n",
+                        "warning",
                     )
 
-                    # Add visual separator
-                    self.result_text.insert("end", "-" * 40 + "\n")
+                self.result_text.insert("end", "Solution:\n", "header")
+                for i, val in enumerate(solution):
+                    self.result_text.insert("end", f"x{i + 1} = {val:8.4f}\n")
 
-                except ValueError as e:
-                    self.result_text.insert("end", f"Error: {str(e)}\n", "error")
-            else:
-                try:
-                    result = gauss_elimination(matrix_a)
-                    self.result_text.insert("end", "Reduced Matrix:\n")
-                    self.result_text.insert("end", self.format_matrix(result))
-                except ValueError as e:
-                    self.result_text.insert("end", f"Error: {str(e)}")
+                self.result_text.insert(
+                    "end", f"\nMean Absolute Error: {mae:8.4e}\n", "info"
+                )
+
+            elif self.method_var.get() == "gauss_elimination":
+                solution, mae, is_diag_dominant = gauss_elimination(matrix_a, vector_b)
+
+                if not is_diag_dominant:
+                    self.result_text.insert(
+                        "end",
+                        "\u26a0\ufe0f Matrix is not diagonally dominant.\n\n",
+                        "warning",
+                    )
+
+                self.result_text.insert("end", "Solution:\n", "header")
+                for i, val in enumerate(solution):
+                    self.result_text.insert("end", f"x{i + 1} = {val:8.4f}\n")
+
+                self.result_text.insert(
+                    "end", f"\nMean Absolute Error: {mae:8.4e}\n", "info"
+                )
 
         except Exception as e:
             self.matrix_input.show_error(str(e))
