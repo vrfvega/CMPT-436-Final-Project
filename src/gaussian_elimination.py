@@ -44,7 +44,9 @@ def gauss_elimination(A):
 def main():
     # User input for the augmented matrix
     print("Enter the augmented matrix row by row (leave an empty line to finish):")
-    print("Each row should be space-separated values (coefficients followed by the constant term).")
+    print(
+        "Each row should be space-separated values (coefficients followed by the constant term)."
+    )
 
     A = []
     while True:
