@@ -39,3 +39,6 @@ Run tests with code coverage:
 ```python
 pytest --cov=src
 ```
+
+## Link to Presentation:
+https://docs.google.com/presentation/d/1YBy1s8-QGNAO1SQX3SrUYXJGjtqIB4tat0Av7eT0qHI/edit?usp=sharing
